@@ -9,6 +9,8 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.apache.commons.cli.ParseException;
+import org.deventm.syncman.database.DatabaseException;
+import org.deventm.syncman.database.FileDatabase;
 import org.deventm.synman.params.ParamsParser;
 
 /**
@@ -35,7 +37,8 @@ public class Start {
 
     private static final String LOG_EXIT_DONE = "Done without errors.";
 
-    public static void main(String[] args) throws CliException {
+    public static void main(String[] args) throws CliException,
+	    DatabaseException {
 	loadLoggerProperties();
 	ParamsParser parser = createParser(args);
 	String val = parser.validate();
@@ -44,8 +47,12 @@ public class Start {
 	    exit(LOG_EXIT_ERROR.replace("%s", val), 1);
 	}
 
-	CliController controller = new CliController(parser);
+	File dbfile = new File("syncman.db");
+	FileDatabase database = new FileDatabase(dbfile);
+	CliController controller = new CliController(database, parser);
+	controller.run();
 
+	database.flush();
 	exit(LOG_EXIT_DONE, 0);
     }
 

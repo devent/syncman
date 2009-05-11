@@ -6,22 +6,12 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.deventm.syncman</groupId>
-  <artifactId>syncman-cli</artifactId>
+  <artifactId>syncman-filedatabase</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <dependencies>
   	<dependency>
   		<groupId>org.deventm.syncman</groupId>
-  		<artifactId>syncman-params</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.deventm.syncman</groupId>
   		<artifactId>syncman-database</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.deventm.syncman</groupId>
-  		<artifactId>syncman-filedatabase</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>
