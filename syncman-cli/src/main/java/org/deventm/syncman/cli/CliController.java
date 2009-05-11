@@ -1,7 +1,6 @@
 package org.deventm.syncman.cli;
 
 import java.io.File;
-import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,11 +20,6 @@ public class CliController {
      */
     private static final String LOG_PATH_NOT_EXISTS_SKIPPING = "Path '%s' do not exists, skipping.";
 
-    /**
-     * 
-     */
-    private static final String OUT_PATH_NOT_EXISTS_SKIPPING = "Path '%s' do not exists, skipping.";
-
     private static final String HOME = System.getProperty("user.home");
 
     private final Logger log = Logger.getLogger(CliController.class.getName());
@@ -34,13 +28,17 @@ public class CliController {
 
     private final ParamsParser parser;
 
+    private final CliOutput output;
+
     /**
      * @param database
      * @param parser
      */
-    public CliController(FileDatabase database, ParamsParser parser) {
+    public CliController(FileDatabase database, ParamsParser parser,
+	    CliOutput output) {
 	this.database = database;
 	this.parser = parser;
+	this.output = output;
     }
 
     public void run() throws CliException {
@@ -58,7 +56,7 @@ public class CliController {
 	addPaths();
 	removePaths();
 	if (parser.isList()) {
-	    listPaths();
+	    output.listPaths();
 	}
 	if (parser.isSync()) {
 	    startSync();
@@ -80,18 +78,9 @@ public class CliController {
     private void removePaths() throws DatabaseException {
 	for (String path : parser.getAdds()) {
 	    File file = new File(path);
+	    output.outputRemove(file.getAbsolutePath());
 	    database.removePath(file);
 	}
-    }
-
-    /**
-     * @param path
-     */
-    private void outputSkip(String path) {
-	if (parser.isQuite()) {
-	    return;
-	}
-	System.out.println(OUT_PATH_NOT_EXISTS_SKIPPING.replace("%s", path));
     }
 
     /**
@@ -106,23 +95,12 @@ public class CliController {
 		if (log.isLoggable(Level.WARNING))
 		    log.warning(LOG_PATH_NOT_EXISTS_SKIPPING
 			    .replace("%s", path));
-		outputSkip(path);
+		output.outputSkip(path);
 		continue;
 	    }
+	    output.outputAdd(path);
 	    database.addPath(file);
 	}
     }
 
-    /**
-     * @throws DatabaseException
-     * 
-     */
-    private void listPaths() throws DatabaseException {
-	Formatter f = new Formatter();
-	for (File path : database.getPaths()) {
-	    f.format("%s\n", path.getAbsolutePath());
-	}
-
-	System.out.println(f.toString());
-    }
 }

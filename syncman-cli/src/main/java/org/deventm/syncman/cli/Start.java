@@ -49,7 +49,14 @@ public class Start {
 
 	File dbfile = new File("syncman.db");
 	FileDatabase database = new FileDatabase(dbfile);
-	CliController controller = new CliController(database, parser);
+	CliOutput output = new CliOutput(database);
+	if (parser.isQuite()) {
+	    output = new QuiteCliOutput(database);
+	}
+	if (parser.isVerbose()) {
+	    output = new VerboseCliOutput(database);
+	}
+	CliController controller = new CliController(database, parser, output);
 	controller.run();
 
 	database.flush();
