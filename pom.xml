@@ -6,6 +6,7 @@
   <packaging>pom</packaging>
   <modules>
   	<module>syncman-params</module>
+  	<module>syncman-cli</module>
   </modules>
 
 
