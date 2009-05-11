@@ -1,0 +1,11 @@
+*.class
+*.jar
+.project
+.classpath
+.settings
+target/
+trafficvisualizer-jme2/properties.cfg
+trafficvisualizer-starter/doc/
+test/
+*#
+*~*
