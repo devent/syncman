@@ -1,0 +1,17 @@
+<shortcuts>
+    <programGroup defaultName="Devent Regexp" location="startMenu"/>
+    <shortcut
+        name="Devent Regexp"
+        programGroup="yes"
+        desktop="yes"
+        applications="no"
+        startMenu="yes"
+        startup="no"
+        target="$INSTALL_PATH\bin\regexp.bat"
+        commandLine=""
+        workingDirectory="$INSTALL_PATH"
+        description=""
+        iconFile="$INSTALL_PATH\icon.ico"
+        iconIndex="0"
+        initialState="normal"/>
+</shortcuts>

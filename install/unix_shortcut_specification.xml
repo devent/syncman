@@ -1,0 +1,21 @@
+<shortcuts>
+    <programGroup defaultName="Devent Regexp" location="startMenu"/>
+    <shortcut
+             name="Devent Regexp"
+        programGroup="yes"
+        desktop="yes"
+        applications="no"
+        startMenu="yes"
+        startup="no"
+        target="$INSTALL_PATH/bin/regexp.sh"
+        commandLine=""
+        workingDirectory="$INSTALL_PATH"
+        description=""
+        iconFile="$INSTALL_PATH/icon.png"
+        iconIndex="0"
+        type="Application"
+        encoding="UTF-8"
+        terminal="false"
+        KdeSubstUID="false"
+        initialState="normal"/>
+</shortcuts>

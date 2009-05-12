@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<installation version="1.0">
+
+    <variables>
+        <variable name="VERSION" value="0.0.1"/>
+    </variables>
+
+    <info>
+        <appname>Devent Syncman</appname>
+        <appversion>0.0.1</appversion>
+        <appsubpath>Syncman</appsubpath>
+        <authors>
+            <author name="Erwin Mueller" email="erwin.mueller@deventm.org"/>
+            <javaversion>0.0.1</javaversion>
+          </authors>
+    </info>
+
+    <guiprefs width="640" height="480" resizable="yes"/>
+
+    <locale>
+        <langpack iso3="eng"/>
+        <langpack iso3="deu"/>
+    </locale>
+
+    <resources>
+        <res id="LicencePanel.licence" src="txt/licence.txt"/>
+        <res id="InfoPanel.info" src="txt/readme.txt"/>
+    </resources>
+
+    <panels>
+        <panel classname="InfoPanel"/>
+        <panel classname="TargetPanel"/>
+        <panel classname="PacksPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="FinishPanel"/>
+    </panels>
+
+    <packs>
+        <pack id="core" name="Core" required="yes">
+            <description>The base files</description>
+            <!--text files-->
+            <file src="txt/readme.txt" targetdir="$INSTALL_PATH/txt"/>
+            <file src="txt/licence.txt" targetdir="$INSTALL_PATH/txt"/>
+            <!--libs-->
+            <fileset dir="libs/" targetdir="$INSTALL_PATH/libs">
+                <include name="*.jar"/>
+            </fileset>
+        </pack>
+
+        <pack id="linux" name="Linux" required="no">
+            <description>Executables for Linux</description>
+            <file src="bin/syncman.sh" targetdir="$INSTALL_PATH/bin"/>
+            <executable targetfile="$INSTALL_PATH/bin/syncman.sh" stage="never" keep="true"/>
+        </pack>
+        <pack id="windows" name="Windows" required="no">
+            <description>Executables for Windows</description>
+            <file src="bin/syncman.bat" targetdir="$INSTALL_PATH/bin"/>
+        </pack>
+    </packs>
+
+    <native type="izpack" name="ShellLink.dll"/>
+
+</installation>

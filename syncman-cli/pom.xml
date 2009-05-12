@@ -34,5 +34,10 @@
   		<artifactId>syncman-process</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.deventm.bootstrap</groupId>
+  		<artifactId>Bootstrap</artifactId>
+  		<version>1.2</version>
+  	</dependency>
   </dependencies>
 </project>
