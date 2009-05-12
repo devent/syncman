@@ -52,12 +52,12 @@ public class Start {
 
 	File dbfile = new File("syncman.db");
 	FileDatabase database = new FileDatabase(dbfile);
-	CliOutput output = new CliOutput(database);
+	CliOutput output = new CliOutput();
 	if (parser.isQuite()) {
-	    output = new QuiteCliOutput(database);
+	    output = new QuiteCliOutput();
 	}
 	if (parser.isVerbose()) {
-	    output = new VerboseCliOutput(database);
+	    output = new VerboseCliOutput();
 	}
 	CliController controller = new CliController(database, parser, output);
 	controller.run();

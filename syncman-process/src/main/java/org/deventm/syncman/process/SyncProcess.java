@@ -94,7 +94,7 @@ public class SyncProcess implements Runnable {
 	f.format("%s %s %s %s", command, params, path.getAbsolutePath(), device
 		.getAbsolutePath());
 
-	Process p = Runtime.getRuntime().exec(command);
+	Process p = Runtime.getRuntime().exec(f.toString());
 	outputStream = new BufferedReader(new InputStreamReader(p
 		.getInputStream()));
 

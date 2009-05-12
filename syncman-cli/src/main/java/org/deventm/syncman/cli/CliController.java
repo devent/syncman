@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.deventm.syncman.database.DatabaseException;
 import org.deventm.syncman.database.FileDatabase;
 import org.deventm.syncman.output.CliOutput;
+import org.deventm.syncman.process.ProcessController;
 import org.deventm.synman.params.ParamsParser;
 
 /**
@@ -57,7 +58,7 @@ public class CliController {
 	addPaths();
 	removePaths();
 	if (parser.isList()) {
-	    output.listPaths();
+	    output.listPaths(database.getPaths());
 	}
 	if (parser.isSync()) {
 	    startSync();
@@ -65,11 +66,16 @@ public class CliController {
     }
 
     /**
+     * @throws DatabaseException
      * 
      */
-    private void startSync() {
-	// TODO Auto-generated method stub
-
+    private void startSync() throws DatabaseException {
+	for (String name : parser.getDevices()) {
+	    File device = new File(name);
+	    ProcessController c = new ProcessController(output, database
+		    .getPaths(), device);
+	    c.startSync();
+	}
     }
 
     /**

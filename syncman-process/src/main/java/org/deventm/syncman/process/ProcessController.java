@@ -31,7 +31,7 @@ public class ProcessController {
 	this.paths = paths;
 	this.device = device;
 
-	params = "-compress --recursive --delete --links --times --perms";
+	params = "--compress --recursive --delete --links --times --perms -P";
 	executor = Executors.newFixedThreadPool(2);
     }
 
