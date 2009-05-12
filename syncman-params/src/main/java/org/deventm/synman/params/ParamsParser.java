@@ -46,6 +46,10 @@ public class ParamsParser extends LineParser {
 
     private static final String SHORT_VERBOSE = "v";
 
+    private static final String VAL_ADDS_DEVICES = "To add a new path you need to specify the device.";
+
+    private static final String VAL_REMOVE_DEVICES = "To remove a path you need to specify the device.";
+
     private static final String VAL_SYNC_DEVICES = "If you want to start the synchronization you must specify at least one device.";
 
     private static final String VAL_VERBOSE_QUITE = "The application cannot be verbose and quite at the same time.";
@@ -154,6 +158,13 @@ public class ParamsParser extends LineParser {
     }
 
     /**
+     * @return the removes
+     */
+    public List<String> getRemoves() {
+	return removes;
+    }
+
+    /**
      * @return the list
      */
     public boolean isList() {
@@ -182,6 +193,12 @@ public class ParamsParser extends LineParser {
     }
 
     public String validate() {
+	if (adds.size() > 0 && devices.size() == 0) {
+	    return VAL_ADDS_DEVICES;
+	}
+	if (removes.size() > 0 && devices.size() == 0) {
+	    return VAL_REMOVE_DEVICES;
+	}
 	if (sync && devices.size() == 0) {
 	    return VAL_SYNC_DEVICES;
 	}

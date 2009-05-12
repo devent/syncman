@@ -1,11 +1,14 @@
 package org.deventm.syncman.cli;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.deventm.syncman.database.DatabaseException;
-import org.deventm.syncman.database.FileDatabase;
+import org.deventm.syncman.database.Device;
+import org.deventm.syncman.database.Path;
+import org.deventm.syncman.database.XMLDatabase;
 import org.deventm.syncman.output.CliOutput;
 import org.deventm.syncman.process.ProcessController;
 import org.deventm.synman.params.ParamsParser;
@@ -24,9 +27,11 @@ public class CliController {
 
     private static final String HOME = System.getProperty("user.home");
 
+    private static final String LOG_DEVICE_NOT_EXISTS_SKIPPING = "Device '%s' do not exists, skipping.";
+
     private final Logger log = Logger.getLogger(CliController.class.getName());
 
-    private final FileDatabase database;
+    private final XMLDatabase database;
 
     private final ParamsParser parser;
 
@@ -36,7 +41,7 @@ public class CliController {
      * @param database
      * @param parser
      */
-    public CliController(FileDatabase database, ParamsParser parser,
+    public CliController(XMLDatabase database, ParamsParser parser,
 	    CliOutput output) {
 	this.database = database;
 	this.parser = parser;
@@ -58,7 +63,7 @@ public class CliController {
 	addPaths();
 	removePaths();
 	if (parser.isList()) {
-	    output.listPaths(database.getPaths());
+	    output.listPaths(database.getDevices());
 	}
 	if (parser.isSync()) {
 	    startSync();
@@ -70,10 +75,14 @@ public class CliController {
      * 
      */
     private void startSync() throws DatabaseException {
-	for (String name : parser.getDevices()) {
-	    File device = new File(name);
-	    ProcessController c = new ProcessController(output, database
-		    .getPaths(), device);
+	for (String devicestr : parser.getDevices()) {
+	    devicestr = devicestr.replaceFirst("^~", HOME);
+	    Device device = database.getDevice(devicestr);
+	    if (device == null) {
+		continue;
+	    }
+
+	    ProcessController c = new ProcessController(output, device);
 	    c.startSync();
 	}
     }
@@ -83,10 +92,16 @@ public class CliController {
      * 
      */
     private void removePaths() throws DatabaseException {
-	for (String path : parser.getAdds()) {
-	    File file = new File(path);
-	    output.outputRemove(file.getAbsolutePath());
-	    database.removePath(file);
+	for (String devicestr : parser.getDevices()) {
+	    devicestr = devicestr.replaceFirst("^~", HOME);
+	    Device device = new Device(new ArrayList<Path>(), new File(
+		    devicestr));
+	    for (String pathstr : parser.getRemoves()) {
+		pathstr = pathstr.replaceFirst("^~", HOME);
+		Path path = new Path(new File(pathstr));
+		output.outputRemove(device, path);
+		database.removePath(device, path);
+	    }
 	}
     }
 
@@ -95,18 +110,33 @@ public class CliController {
      * 
      */
     private void addPaths() throws DatabaseException {
-	for (String path : parser.getAdds()) {
-	    path = path.replaceFirst("^~", HOME);
-	    File file = new File(path);
-	    if (!file.exists()) {
+	for (String devicestr : parser.getDevices()) {
+	    devicestr = devicestr.replaceFirst("^~", HOME);
+	    Device device = new Device(new ArrayList<Path>(), new File(
+		    devicestr));
+	    if (!device.exists()) {
 		if (log.isLoggable(Level.WARNING))
-		    log.warning(LOG_PATH_NOT_EXISTS_SKIPPING
-			    .replace("%s", path));
-		output.outputSkip(path);
+		    log.warning(LOG_DEVICE_NOT_EXISTS_SKIPPING.replace("%s",
+			    device.toString()));
+		output.outputSkip(device);
 		continue;
 	    }
-	    output.outputAdd(path);
-	    database.addPath(file);
+
+	    for (String pathstr : parser.getAdds()) {
+		pathstr = pathstr.replaceFirst("^~", HOME);
+		Path path = new Path(new File(pathstr));
+
+		if (!path.exists()) {
+		    if (log.isLoggable(Level.WARNING))
+			log.warning(LOG_PATH_NOT_EXISTS_SKIPPING.replace("%s",
+				path.toString()));
+		    output.outputSkip(path);
+		    continue;
+		}
+
+		output.outputAdd(device, path);
+		database.addPath(device, path);
+	    }
 	}
     }
 

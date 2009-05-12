@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.cli.ParseException;
 import org.deventm.syncman.database.DatabaseException;
-import org.deventm.syncman.database.FileDatabase;
+import org.deventm.syncman.database.XMLDatabase;
 import org.deventm.syncman.output.CliOutput;
 import org.deventm.syncman.output.QuiteCliOutput;
 import org.deventm.syncman.output.VerboseCliOutput;
@@ -51,7 +51,7 @@ public class Start {
 	}
 
 	File dbfile = new File("syncman.db");
-	FileDatabase database = new FileDatabase(dbfile);
+	XMLDatabase database = new XMLDatabase(dbfile);
 	CliOutput output = new CliOutput();
 	if (parser.isQuite()) {
 	    output = new QuiteCliOutput();

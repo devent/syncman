@@ -1,5 +1,10 @@
 package org.deventm.syncman.output;
 
+import java.util.Formatter;
+
+import org.deventm.syncman.database.Device;
+import org.deventm.syncman.database.Path;
+
 /**
  * 
  * @author Erwin Mueller &lt;funnyacc@gmx.net&gt;
@@ -10,11 +15,11 @@ public class VerboseCliOutput extends CliOutput {
     /**
      * 
      */
-    private static final String OUT_REMOVING_PATH = "Removing the old path '%s'.";
+    private static final String OUT_REMOVING_PATH = "Removing the path '%s' from the device '%s'.";
     /**
      * 
      */
-    private static final String OUT_ADDING_PATH = "Adding the new path '%s'.";
+    private static final String OUT_ADDING_PATH = "Adding the path '%s' to the device '%s'.";
 
     /**
      */
@@ -22,13 +27,17 @@ public class VerboseCliOutput extends CliOutput {
     }
 
     @Override
-    public void outputAdd(String path) {
-	System.out.println(OUT_ADDING_PATH.replace("%s", path));
+    public void outputAdd(Device device, Path path) {
+	Formatter f = new Formatter();
+	f.format(OUT_ADDING_PATH, path.toString(), device.toString());
+	System.out.println(f.toString());
     }
 
     @Override
-    public void outputRemove(String path) {
-	System.out.println(OUT_REMOVING_PATH.replace("%s", path));
+    public void outputRemove(Device device, Path path) {
+	Formatter f = new Formatter();
+	f.format(OUT_REMOVING_PATH, path.toString(), device.toString());
+	System.out.println(f.toString());
     }
 
     @Override

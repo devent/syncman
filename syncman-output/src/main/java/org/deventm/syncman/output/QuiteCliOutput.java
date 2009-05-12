@@ -1,5 +1,8 @@
 package org.deventm.syncman.output;
 
+import org.deventm.syncman.database.Device;
+import org.deventm.syncman.database.Path;
+
 /**
  * 
  * @author Erwin Mueller &lt;funnyacc@gmx.net&gt;
@@ -12,11 +15,11 @@ public class QuiteCliOutput extends CliOutput {
     public QuiteCliOutput() {
     }
 
-    /**
-     * @param path
-     */
     @Override
-    public void outputSkip(String path) {
+    public void outputSkip(Device device) {
     }
 
+    @Override
+    public void outputSkip(Path path) {
+    }
 }

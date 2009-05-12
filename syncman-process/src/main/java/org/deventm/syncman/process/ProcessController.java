@@ -1,9 +1,10 @@
 package org.deventm.syncman.process;
 
-import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.deventm.syncman.database.Device;
+import org.deventm.syncman.database.Path;
 import org.deventm.syncman.output.CliOutput;
 
 /**
@@ -13,9 +14,7 @@ import org.deventm.syncman.output.CliOutput;
  */
 public class ProcessController {
 
-    private final Iterable<File> paths;
-
-    private final File device;
+    private final Device device;
 
     private final ExecutorService executor;
 
@@ -24,11 +23,11 @@ public class ProcessController {
     private final CliOutput output;
 
     /**
-     * 
+     * @param output
+     * @param device
      */
-    public ProcessController(CliOutput output, Iterable<File> paths, File device) {
+    public ProcessController(CliOutput output, Device device) {
 	this.output = output;
-	this.paths = paths;
 	this.device = device;
 
 	params = "--compress --recursive --delete --links --times --perms -P";
@@ -36,8 +35,9 @@ public class ProcessController {
     }
 
     public void startSync() {
-	for (File path : paths) {
-	    executor.execute(new SyncProcess(output, params, path, device));
+	for (Path path : device.getPaths()) {
+	    executor.execute(new SyncProcess(output, params, path.getPath(),
+		    device.getDevice()));
 	}
     }
 }

@@ -1,6 +1,6 @@
 package org.deventm.syncman.database;
 
-import java.io.File;
+import java.util.Collection;
 
 /**
  * 
@@ -9,11 +9,20 @@ import java.io.File;
  */
 public interface Database {
 
-    public abstract Iterable<File> getPaths() throws DatabaseException;
+    public abstract Collection<Device> getDevices() throws DatabaseException;
 
-    public abstract void addPath(File file) throws DatabaseException;
+    public abstract void addPath(Device device, Path path)
+	    throws DatabaseException;
 
-    public abstract void removePath(File file) throws DatabaseException;
+    public abstract void removePath(Device device, Path path)
+	    throws DatabaseException;
+
+    public abstract void removeDevice(Device device) throws DatabaseException;
+
+    public abstract void addDevice(Device device) throws DatabaseException;
 
     public abstract void flush() throws DatabaseException;
+
+    public abstract Device getDevice(String devicestr);
+
 }

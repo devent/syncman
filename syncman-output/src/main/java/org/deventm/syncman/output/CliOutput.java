@@ -1,7 +1,10 @@
 package org.deventm.syncman.output;
 
-import java.io.File;
-import java.util.Formatter;
+import java.util.Collection;
+
+import org.deventm.syncman.database.DatabaseException;
+import org.deventm.syncman.database.Device;
+import org.deventm.syncman.database.Path;
 
 /**
  * 
@@ -14,6 +17,7 @@ public class CliOutput {
      * 
      */
     private static final String OUT_PATH_NOT_EXISTS_SKIPPING = "Path '%s' do not exists, skipping.";
+    private static final String OUT_DEVICE_NOT_EXISTS_SKIPPING = "Device '%s' do not exists, skipping.";
 
     /**
      * 
@@ -24,38 +28,54 @@ public class CliOutput {
     /**
      * @param path
      */
-    public void outputSkip(String path) {
-	System.out.println(OUT_PATH_NOT_EXISTS_SKIPPING.replace("%s", path));
+    public void outputSkip(Path path) {
+	System.out.println(OUT_PATH_NOT_EXISTS_SKIPPING.replace("%s", path
+		.toString()));
     }
 
     /**
      * @throws DatabaseException
      * 
      */
-    public void listPaths(Iterable<File> paths) {
-	Formatter f = new Formatter();
-	for (File path : paths) {
-	    f.format("%s\n", path.getAbsolutePath());
+    public void listPaths(Collection<Device> devices) {
+	StringBuilder str = new StringBuilder();
+	for (Device device : devices) {
+	    str.append(device.toString());
+	    str.append(": ");
+	    for (Path path : device.getPaths()) {
+		str.append(path.toString());
+		str.append("\n");
+	    }
 	}
 
-	System.out.println(f.toString());
-    }
-
-    /**
-     * @param path
-     */
-    public void outputAdd(String path) {
-    }
-
-    /**
-     * @param path
-     */
-    public void outputRemove(String path) {
+	System.out.println(str.toString());
     }
 
     /**
      * @param line
      */
     public void outputProcessOutput(String line) {
+    }
+
+    /**
+     * @param device
+     * @param path
+     */
+    public void outputRemove(Device device, Path path) {
+    }
+
+    /**
+     * @param device
+     * @param path
+     */
+    public void outputAdd(Device device, Path path) {
+    }
+
+    /**
+     * @param device
+     */
+    public void outputSkip(Device device) {
+	System.out.println(OUT_DEVICE_NOT_EXISTS_SKIPPING.replace("%s", device
+		.toString()));
     }
 }
