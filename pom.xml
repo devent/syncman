@@ -10,6 +10,7 @@
   	<module>syncman-database</module>
   	<module>syncman-filedatabase</module>
   	<module>syncman-process</module>
+  	<module>syncman-output</module>
   </modules>
 
 

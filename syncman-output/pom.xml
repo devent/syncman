@@ -6,13 +6,6 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.deventm.syncman</groupId>
-  <artifactId>syncman-process</artifactId>
+  <artifactId>syncman-output</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <dependencies>
-  	<dependency>
-  		<groupId>org.deventm.syncman</groupId>
-  		<artifactId>syncman-output</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  </dependencies>
 </project>

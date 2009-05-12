@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 import org.apache.commons.cli.ParseException;
 import org.deventm.syncman.database.DatabaseException;
 import org.deventm.syncman.database.FileDatabase;
+import org.deventm.syncman.output.CliOutput;
+import org.deventm.syncman.output.QuiteCliOutput;
+import org.deventm.syncman.output.VerboseCliOutput;
 import org.deventm.synman.params.ParamsParser;
 
 /**

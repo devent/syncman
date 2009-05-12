@@ -1,6 +1,4 @@
-package org.deventm.syncman.cli;
-
-import org.deventm.syncman.database.Database;
+package org.deventm.syncman.output;
 
 /**
  * 
@@ -19,10 +17,8 @@ public class VerboseCliOutput extends CliOutput {
     private static final String OUT_ADDING_PATH = "Adding the new path '%s'.";
 
     /**
-     * @param database
      */
-    public VerboseCliOutput(Database database) {
-	super(database);
+    public VerboseCliOutput() {
     }
 
     @Override
@@ -33,5 +29,10 @@ public class VerboseCliOutput extends CliOutput {
     @Override
     public void outputRemove(String path) {
 	System.out.println(OUT_REMOVING_PATH.replace("%s", path));
+    }
+
+    @Override
+    public void outputProcessOutput(String line) {
+	System.out.println(line);
     }
 }

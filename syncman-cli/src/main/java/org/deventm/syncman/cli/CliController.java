@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.deventm.syncman.database.DatabaseException;
 import org.deventm.syncman.database.FileDatabase;
+import org.deventm.syncman.output.CliOutput;
 import org.deventm.synman.params.ParamsParser;
 
 /**

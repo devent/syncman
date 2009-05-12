@@ -1,11 +1,14 @@
 package org.deventm.syncman.process;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.deventm.syncman.output.CliOutput;
 
 /**
  * 
@@ -20,9 +23,9 @@ public class SyncProcess implements Runnable {
 
     private Exception exception;
 
-    private InputStream output;
+    private BufferedReader outputStream;
 
-    private InputStream error;
+    private BufferedReader errorStream;
 
     private int ret;
 
@@ -32,7 +35,10 @@ public class SyncProcess implements Runnable {
 
     private final File device;
 
-    public SyncProcess(String params, File path, File device) {
+    private final CliOutput output;
+
+    public SyncProcess(CliOutput output, String params, File path, File device) {
+	this.output = output;
 	this.params = params;
 	this.path = path;
 	this.device = device;
@@ -56,15 +62,15 @@ public class SyncProcess implements Runnable {
     /**
      * @return the error
      */
-    public InputStream getError() {
-	return error;
+    public BufferedReader getError() {
+	return errorStream;
     }
 
     /**
      * @return the output
      */
-    public InputStream getOutput() {
-	return output;
+    public BufferedReader getOutput() {
+	return outputStream;
     }
 
     /**
@@ -89,9 +95,16 @@ public class SyncProcess implements Runnable {
 		.getAbsolutePath());
 
 	Process p = Runtime.getRuntime().exec(command);
-	output = p.getInputStream();
-	error = p.getErrorStream();
+	outputStream = new BufferedReader(new InputStreamReader(p
+		.getInputStream()));
+
+	String line = null;
+	while ((line = outputStream.readLine()) != null) {
+	    output.outputProcessOutput(line);
+	}
+
+	errorStream = new BufferedReader(new InputStreamReader(p
+		.getErrorStream()));
 	ret = p.waitFor();
     }
-
 }

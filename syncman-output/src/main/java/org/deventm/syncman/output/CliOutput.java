@@ -1,10 +1,7 @@
-package org.deventm.syncman.cli;
+package org.deventm.syncman.output;
 
 import java.io.File;
 import java.util.Formatter;
-
-import org.deventm.syncman.database.Database;
-import org.deventm.syncman.database.DatabaseException;
 
 /**
  * 
@@ -18,13 +15,10 @@ public class CliOutput {
      */
     private static final String OUT_PATH_NOT_EXISTS_SKIPPING = "Path '%s' do not exists, skipping.";
 
-    private final Database database;
-
     /**
      * 
      */
-    public CliOutput(Database database) {
-	this.database = database;
+    public CliOutput() {
     }
 
     /**
@@ -38,9 +32,9 @@ public class CliOutput {
      * @throws DatabaseException
      * 
      */
-    public void listPaths() throws DatabaseException {
+    public void listPaths(Iterable<File> paths) {
 	Formatter f = new Formatter();
-	for (File path : database.getPaths()) {
+	for (File path : paths) {
 	    f.format("%s\n", path.getAbsolutePath());
 	}
 
@@ -57,5 +51,11 @@ public class CliOutput {
      * @param path
      */
     public void outputRemove(String path) {
+    }
+
+    /**
+     * @param line
+     */
+    public void outputProcessOutput(String line) {
     }
 }

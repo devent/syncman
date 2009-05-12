@@ -1,6 +1,4 @@
-package org.deventm.syncman.cli;
-
-import org.deventm.syncman.database.Database;
+package org.deventm.syncman.output;
 
 /**
  * 
@@ -10,10 +8,8 @@ import org.deventm.syncman.database.Database;
 public class QuiteCliOutput extends CliOutput {
 
     /**
-     * @param database
      */
-    public QuiteCliOutput(Database database) {
-	super(database);
+    public QuiteCliOutput() {
     }
 
     /**
