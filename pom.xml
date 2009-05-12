@@ -9,6 +9,7 @@
   	<module>syncman-cli</module>
   	<module>syncman-database</module>
   	<module>syncman-filedatabase</module>
+  	<module>syncman-process</module>
   </modules>
 
 
