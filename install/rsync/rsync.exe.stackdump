@@ -1,0 +1,14 @@
+ 352941 [main] rsync 8 open_stackdumpfile: Dumping stack trace to rsync.exe.stackdump
+Exception: STATUS_ACCESS_VIOLATION at eip=61047699
+eax=00000000 ebx=611697E8 ecx=FFFFFFFF edx=61124B01 esi=00000000 edi=00000580
+ebp=0065BA68 esp=0065B980 program=Z:\home\devent_fedora\tmp\rsync.exe, pid 8, thread main
+cs=0073 ds=007B es=007B fs=0033 gs=003B ss=007B
+Stack trace:
+Frame     Function  Args
+0065BA68  61047699  (00000001, 0044A3F3, 00000580, 00000003)
+0065BAA8  00411B25  (00000001, 0044A3F3, 00000580, 0041A8BD)
+0065CC18  0041B148  (00000001, 00A601F0, 00A60090, 61010E8C)
+0065CCE8  610060D8  (00000000, 0065CD20, 61005450, 0065CD20)
+61005450  61004416  (0000009C, A02404C7, E8611021, FFFFFF48)
+ 725552 [main] rsync 8 _cygtls::handle_exceptions: Exception: STATUS_ACCESS_VIOLATION
+ 739023 [main] rsync 8 _cygtls::handle_exceptions: Error while dumping state (probably corrupted stack)

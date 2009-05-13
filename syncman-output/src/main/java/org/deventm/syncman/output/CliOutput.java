@@ -13,24 +13,16 @@ import org.deventm.syncman.database.Path;
  */
 public class CliOutput {
 
+    private static final String OUT_DEVICE_NOT_EXISTS_SKIPPING = "Device '%s' do not exists, skipping.";
     /**
      * 
      */
     private static final String OUT_PATH_NOT_EXISTS_SKIPPING = "Path '%s' do not exists, skipping.";
-    private static final String OUT_DEVICE_NOT_EXISTS_SKIPPING = "Device '%s' do not exists, skipping.";
 
     /**
      * 
      */
     public CliOutput() {
-    }
-
-    /**
-     * @param path
-     */
-    public void outputSkip(Path path) {
-	System.out.println(OUT_PATH_NOT_EXISTS_SKIPPING.replace("%s", path
-		.toString()));
     }
 
     /**
@@ -52,6 +44,13 @@ public class CliOutput {
     }
 
     /**
+     * @param device
+     * @param path
+     */
+    public void outputAdd(Device device, Path path) {
+    }
+
+    /**
      * @param line
      */
     public void outputProcessOutput(String line) {
@@ -66,16 +65,17 @@ public class CliOutput {
 
     /**
      * @param device
-     * @param path
-     */
-    public void outputAdd(Device device, Path path) {
-    }
-
-    /**
-     * @param device
      */
     public void outputSkip(Device device) {
 	System.out.println(OUT_DEVICE_NOT_EXISTS_SKIPPING.replace("%s", device
+		.toString()));
+    }
+
+    /**
+     * @param path
+     */
+    public void outputSkip(Path path) {
+	System.out.println(OUT_PATH_NOT_EXISTS_SKIPPING.replace("%s", path
 		.toString()));
     }
 }
