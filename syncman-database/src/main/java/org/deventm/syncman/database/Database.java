@@ -25,4 +25,15 @@ public interface Database {
 
     public abstract Device getDevice(String devicestr);
 
+    /**
+     * @param device
+     * @param exstr
+     */
+    public abstract void addExclude(Device device, String exstr);
+
+    /**
+     * @param device
+     * @param exstr
+     */
+    public abstract void removeExclude(Device device, String exstr);
 }

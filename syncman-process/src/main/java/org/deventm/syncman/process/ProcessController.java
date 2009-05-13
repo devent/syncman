@@ -37,7 +37,7 @@ public class ProcessController {
     public void startSync() {
 	for (Path path : device.getPaths()) {
 	    executor.execute(new SyncProcess(output, params, path.getPath(),
-		    device.getDevice()));
+		    device));
 	}
     }
 }

@@ -1,14 +1,12 @@
 package org.deventm.syncman.cli;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.deventm.syncman.database.Database;
 import org.deventm.syncman.database.DatabaseException;
 import org.deventm.syncman.database.Device;
 import org.deventm.syncman.database.Path;
-import org.deventm.syncman.database.XMLDatabase;
 import org.deventm.syncman.output.CliOutput;
 import org.deventm.syncman.process.ProcessController;
 import org.deventm.synman.params.ParamsParser;
@@ -25,13 +23,11 @@ public class CliController {
      */
     private static final String LOG_PATH_NOT_EXISTS_SKIPPING = "Path '%s' do not exists, skipping.";
 
-    private static final String HOME = System.getProperty("user.home");
-
     private static final String LOG_DEVICE_NOT_EXISTS_SKIPPING = "Device '%s' do not exists, skipping.";
 
     private final Logger log = Logger.getLogger(CliController.class.getName());
 
-    private final XMLDatabase database;
+    private final Database database;
 
     private final ParamsParser parser;
 
@@ -41,7 +37,7 @@ public class CliController {
      * @param database
      * @param parser
      */
-    public CliController(XMLDatabase database, ParamsParser parser,
+    public CliController(Database database, ParamsParser parser,
 	    CliOutput output) {
 	this.database = database;
 	this.parser = parser;
@@ -62,6 +58,8 @@ public class CliController {
     private void run0() throws DatabaseException {
 	addPaths();
 	removePaths();
+	addExcludes();
+	removeExcludes();
 	if (parser.isList()) {
 	    output.listPaths(database.getDevices());
 	}
@@ -71,12 +69,38 @@ public class CliController {
     }
 
     /**
+     * 
+     */
+    private void addExcludes() {
+	for (String devicestr : parser.getDevices()) {
+	    Device device = database.getDevice(devicestr);
+	    for (String exstr : parser.getAddExcludes()) {
+		database.addExclude(device, exstr);
+		output.outputAddEx(device, exstr);
+	    }
+	}
+    }
+
+    /**
+     * 
+     */
+    private void removeExcludes() {
+	for (String devicestr : parser.getDevices()) {
+	    Device device = database.getDevice(devicestr);
+	    for (String exstr : parser.getRemoveExcludes()) {
+		database.removeExclude(device, exstr);
+		output.outputRemoveEx(device, exstr);
+	    }
+	}
+    }
+
+    /**
      * @throws DatabaseException
      * 
      */
     private void startSync() throws DatabaseException {
 	for (String devicestr : parser.getDevices()) {
-	    devicestr = devicestr.replaceFirst("^~", HOME);
+	    devicestr = new Device(devicestr).getDevice().getAbsolutePath();
 	    Device device = database.getDevice(devicestr);
 	    if (device == null) {
 		continue;
@@ -93,12 +117,9 @@ public class CliController {
      */
     private void removePaths() throws DatabaseException {
 	for (String devicestr : parser.getDevices()) {
-	    devicestr = devicestr.replaceFirst("^~", HOME);
-	    Device device = new Device(new ArrayList<Path>(), new File(
-		    devicestr));
+	    Device device = new Device(devicestr);
 	    for (String pathstr : parser.getRemoves()) {
-		pathstr = pathstr.replaceFirst("^~", HOME);
-		Path path = new Path(new File(pathstr));
+		Path path = new Path(pathstr);
 		output.outputRemove(device, path);
 		database.removePath(device, path);
 	    }
@@ -111,9 +132,7 @@ public class CliController {
      */
     private void addPaths() throws DatabaseException {
 	for (String devicestr : parser.getDevices()) {
-	    devicestr = devicestr.replaceFirst("^~", HOME);
-	    Device device = new Device(new ArrayList<Path>(), new File(
-		    devicestr));
+	    Device device = new Device(devicestr);
 	    if (!device.exists()) {
 		if (log.isLoggable(Level.WARNING))
 		    log.warning(LOG_DEVICE_NOT_EXISTS_SKIPPING.replace("%s",
@@ -123,8 +142,7 @@ public class CliController {
 	    }
 
 	    for (String pathstr : parser.getAdds()) {
-		pathstr = pathstr.replaceFirst("^~", HOME);
-		Path path = new Path(new File(pathstr));
+		Path path = new Path(pathstr);
 
 		if (!path.exists()) {
 		    if (log.isLoggable(Level.WARNING))

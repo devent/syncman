@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -136,8 +135,30 @@ public class XMLDatabase implements Database {
      * @return
      */
     public Device getDevice(String devicestr) {
-	Device dev = new Device(new ArrayList<Path>(), new File(devicestr));
+	Device dev = new Device(devicestr);
 	return devices.get(dev);
+    }
+
+    @Override
+    public void addExclude(Device device, String exstr) {
+	Device dev = devices.get(device);
+	if (dev == null) {
+	    return;
+	}
+
+	if (!dev.excludes.contains(exstr)) {
+	    dev.excludes.add(exstr);
+	}
+    }
+
+    @Override
+    public void removeExclude(Device device, String exstr) {
+	Device dev = devices.get(device);
+	if (dev == null) {
+	    return;
+	}
+
+	dev.excludes.remove(exstr);
     }
 
 }

@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.deventm.syncman.database.Device;
 import org.deventm.syncman.output.CliOutput;
 
 /**
@@ -37,11 +39,20 @@ public class SyncProcess implements Runnable {
 
     private final CliOutput output;
 
-    public SyncProcess(CliOutput output, String params, File path, File device) {
+    private final Collection<String> excludes;
+
+    /**
+     * @param output
+     * @param params
+     * @param path
+     * @param device
+     */
+    public SyncProcess(CliOutput output, String params, File path, Device device) {
 	this.output = output;
 	this.params = params;
 	this.path = path;
-	this.device = device;
+	this.device = device.getDevice();
+	this.excludes = device.getExcludes();
     }
 
     @Override
@@ -90,9 +101,15 @@ public class SyncProcess implements Runnable {
     private void run0() throws IOException, InterruptedException {
 	String command = COMMAND_RSYNC;
 
+	StringBuilder ex = new StringBuilder();
+	for (String str : excludes) {
+	    ex.append(" --exclude=");
+	    ex.append(str);
+	}
+
 	Formatter f = new Formatter();
-	f.format("%s %s %s %s", command, params, path.getAbsolutePath(), device
-		.getAbsolutePath());
+	f.format("%s %s %s %s %s", command, params, path.getAbsolutePath(),
+		device.getAbsolutePath(), ex.toString());
 
 	Process p = Runtime.getRuntime().exec(f.toString());
 	outputStream = new BufferedReader(new InputStreamReader(p

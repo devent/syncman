@@ -20,6 +20,8 @@ public class ParamsParser extends LineParser {
 
     private static final String LONG_ADD = "add";
 
+    private static final String LONG_ADD_EXCLUSE = "addex";
+
     private static final String LONG_DEVICE = "device";
 
     private static final String LONG_LIST = "list";
@@ -28,11 +30,15 @@ public class ParamsParser extends LineParser {
 
     private static final String LONG_REMOVE = "remove";
 
+    private static final String LONG_REMOVE_EXCLUSE = "removeex";
+
     private static final String LONG_SYNC = "sync";
 
     private static final String LONG_VERBOSE = "verbose";
 
     private static final String SHORT_ADD = "a";
+
+    private static final String SHORT_ADD_EXCLUSE = "e";
 
     private static final String SHORT_DEVICE = "d";
 
@@ -41,6 +47,8 @@ public class ParamsParser extends LineParser {
     private static final String SHORT_QUITE = "q";
 
     private static final String SHORT_REMOVE = "r";
+
+    private static final String SHORT_REMOVE_EXCLUSE = "E";
 
     private static final String SHORT_SYNC = "s";
 
@@ -54,6 +62,12 @@ public class ParamsParser extends LineParser {
 
     private static final String VAL_VERBOSE_QUITE = "The application cannot be verbose and quite at the same time.";
 
+    private static final String VAL_ADDEXS_DEVICES = "To add a new exclude pattern you need to specify the device.";
+
+    private static final String VAL_REMOVEEXS_DEVICES = "To remove an exclude pattern you need to specify the device.";
+
+    private final List<String> addExcludes;
+
     private final List<String> adds;
 
     private final List<String> devices;
@@ -63,6 +77,8 @@ public class ParamsParser extends LineParser {
     private final Logger log = Logger.getLogger(ParamsParser.class.getName());
 
     private boolean quite;
+
+    private final List<String> removeExcludes;
 
     private final List<String> removes;
 
@@ -80,6 +96,8 @@ public class ParamsParser extends LineParser {
 	adds = new ArrayList<String>();
 	devices = new ArrayList<String>();
 	removes = new ArrayList<String>();
+	addExcludes = new ArrayList<String>();
+	removeExcludes = new ArrayList<String>();
 	list = false;
 	quite = false;
 	sync = false;
@@ -141,6 +159,29 @@ public class ParamsParser extends LineParser {
 			parseList("true");
 		    }
 		}));
+	addOption(new Option(SHORT_ADD_EXCLUSE, LONG_ADD_EXCLUSE, "",
+		HasArgs.YES, new OptionParser() {
+
+		    @Override
+		    public void parse(CommandLine line) {
+			parseAddEx(line.getOptionValue(SHORT_ADD_EXCLUSE));
+		    }
+		}));
+	addOption(new Option(SHORT_REMOVE_EXCLUSE, LONG_REMOVE_EXCLUSE, "",
+		HasArgs.YES, new OptionParser() {
+
+		    @Override
+		    public void parse(CommandLine line) {
+			parseRemoveEx(line.getOptionValue(SHORT_REMOVE_EXCLUSE));
+		    }
+		}));
+    }
+
+    /**
+     * @return the addExcludes
+     */
+    public List<String> getAddExcludes() {
+	return addExcludes;
     }
 
     /**
@@ -155,6 +196,13 @@ public class ParamsParser extends LineParser {
      */
     public List<String> getDevices() {
 	return new ArrayList<String>(devices);
+    }
+
+    /**
+     * @return the removeExcludes
+     */
+    public List<String> getRemoveExcludes() {
+	return removeExcludes;
     }
 
     /**
@@ -199,6 +247,12 @@ public class ParamsParser extends LineParser {
 	if (removes.size() > 0 && devices.size() == 0) {
 	    return VAL_REMOVE_DEVICES;
 	}
+	if (addExcludes.size() > 0 && devices.size() == 0) {
+	    return VAL_ADDEXS_DEVICES;
+	}
+	if (removeExcludes.size() > 0 && devices.size() == 0) {
+	    return VAL_REMOVEEXS_DEVICES;
+	}
 	if (sync && devices.size() == 0) {
 	    return VAL_SYNC_DEVICES;
 	}
@@ -221,6 +275,20 @@ public class ParamsParser extends LineParser {
 	    log.config("set add to '" + optionValue + "'.");
 
 	adds.add(optionValue);
+    }
+
+    /**
+     * @param optionValue
+     */
+    private void parseAddEx(String optionValue) {
+	if (optionValue == null) {
+	    return;
+	}
+
+	if (log.isLoggable(Level.CONFIG))
+	    log.config("set add exclude to '" + optionValue + "'.");
+
+	addExcludes.add(optionValue);
     }
 
     /**
@@ -277,6 +345,20 @@ public class ParamsParser extends LineParser {
 	    log.config("set remove to '" + optionValue + "'.");
 
 	removes.add(optionValue);
+    }
+
+    /**
+     * @param optionValue
+     */
+    private void parseRemoveEx(String optionValue) {
+	if (optionValue == null) {
+	    return;
+	}
+
+	if (log.isLoggable(Level.CONFIG))
+	    log.config("set remove exclude to '" + optionValue + "'.");
+
+	removeExcludes.add(optionValue);
     }
 
     /**

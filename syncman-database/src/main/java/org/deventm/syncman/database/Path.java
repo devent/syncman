@@ -11,6 +11,13 @@ public class Path {
 
     final File path;
 
+    private static final String HOME = System.getProperty("user.home");
+
+    public Path(String pathstr) {
+	pathstr = pathstr.replaceFirst("^~", HOME);
+	path = new File(pathstr);
+    }
+
     public Path(File path) {
 	this.path = path;
     }
